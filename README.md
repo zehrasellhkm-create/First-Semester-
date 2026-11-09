@@ -17,3 +17,13 @@
 - [Модель данных](docs/data-model.md)
 - [API](docs/api-contract.md)
 - [Матрица требований](docs/requirements-matrix.md)
+
+## Запуск клиента (ЛР3)
+
+Нужен Node.js LTS.
+
+cd frontend
+npm install
+npm run dev
+
+Открыть адрес, который напишет терминал (обычно http://localhost:5173).
