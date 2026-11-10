@@ -16,3 +16,18 @@ export const items = ref([
     status: 'InProgress'
   }
 ])
+
+// Учебный счётчик: в ЛР6 id и number придут от сервера
+let nextId = 3
+
+export function addItem({ title, laboratoryId, description }) {
+  const id = nextId++
+  items.value.push({
+    id,
+    number: `ДОП-${100 + id}`,
+    title,
+    laboratoryId,
+    description,
+    status: 'New'
+  })
+}
