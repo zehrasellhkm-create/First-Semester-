@@ -1,9 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { addItem } from '../ticketsStore.js'
+import { createTicket, describeError } from '../api/tickets.js'
 
 const router = useRouter()
+
+// true только для проверки ответа 400 (тема abc проходит к «серверу»)
+const SKIP_CLIENT_CHECK = false
 
 const form = ref({
   title: '',
@@ -12,6 +15,8 @@ const form = ref({
 })
 
 const errors = ref({ title: '', laboratoryId: '', description: '' })
+const serverError = ref('')
+const isSubmitting = ref(false)
 
 function validate() {
   const title = form.value.title.trim()
@@ -33,17 +38,28 @@ function validate() {
   return !errors.value.title && !errors.value.laboratoryId && !errors.value.description
 }
 
-function onCreate() {
-  if (!validate()) return
+async function onCreate() {
+  // Защита от двойной отправки
+  if (isSubmitting.value) return
 
-  addItem({
-    title: form.value.title.trim(),
-    laboratoryId: form.value.laboratoryId,
-    description: form.value.description.trim()
-  })
+  serverError.value = ''
+  if (!SKIP_CLIENT_CHECK && !validate()) return
 
-  form.value = { title: '', laboratoryId: null, description: '' }
-  router.push('/')
+  isSubmitting.value = true
+  try {
+    await createTicket({
+      title: form.value.title.trim(),
+      laboratoryId: form.value.laboratoryId,
+      description: form.value.description.trim()
+    })
+    form.value = { title: '', laboratoryId: null, description: '' }
+    router.push('/') // список сам загрузит свежие данные из API
+  } catch (err) {
+    // Поля остаются заполненными, чтобы человек мог исправить
+    serverError.value = describeError(err)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -63,7 +79,11 @@ function onCreate() {
       <textarea id="description" v-model="form.description"></textarea>
       <p v-if="errors.description" class="error">{{ errors.description }}</p>
 
-      <button type="submit">Создать</button>
+      <p v-if="serverError" class="error" role="alert">{{ serverError }}</p>
+
+      <button type="submit" :disabled="isSubmitting">
+        {{ isSubmitting ? 'Создаём…' : 'Создать' }}
+      </button>
     </form>
   </main>
 </template>

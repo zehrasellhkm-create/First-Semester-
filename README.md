@@ -68,3 +68,10 @@ npm run dev
 - после F5 добавленные записи исчезают: это ожидаемо, сервера и БД пока нет
 
 Отчёт: docs/reports/lab-05.md
+## ЛР6: клиент API и mock
+
+API-модуль: frontend/src/api/tickets.js (getTickets, createTicket). Режим mock или fetch переключается константой USE_MOCK. Адрес API берётся из VITE_API_BASE_URL (см. frontend/.env.example).
+
+Состояния списка: загрузка, пусто, данные, ошибка. Отказы: 400 (Проверьте поля), 500 (Сервер не смог обработать запрос), нет связи.
+
+Отчёт: docs/reports/lab-06.md
