@@ -22,11 +22,33 @@
 
 Нужен Node.js LTS.
 
+```
 cd frontend
 npm install
 npm run dev
+```
 
 Открыть адрес, который напишет терминал (обычно http://localhost:5173).
+
+## ЛР4: компоненты и маршруты
+
+Маршруты клиента (Vue Router):
+
+| Адрес | Экран |
+|---|---|
+| / | список заявок |
+| /new | создание заявки |
+| /login | вход |
+
+Структура frontend/src:
+
+- App.vue: AppHeader и router-view
+- router.js: три маршрута
+- ticketsStore.js: единственный общий массив заявок
+- components/AppHeader.vue, components/TicketTable.vue
+- pages/TicketList.vue, pages/TicketNew.vue, pages/Login.vue
+
+Таблица получает массив через props, источник данных: ticketsStore.js.
 
 ## ЛР5: форма и список в памяти
 
